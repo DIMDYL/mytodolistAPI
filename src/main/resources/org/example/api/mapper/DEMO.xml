@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.api.mapper.ClassificationMapper">
+    <select id="getall" resultType="org.example.api.pojo.Entity.ClassificationEntity">
+        select * from classification
+    </select>
+    <select id="statistics" resultType="org.example.api.pojo.VO.StatisticsVO">
+        select count(b.classification_id) as value, a.name
+        from classification a, course b
+        where a.id = b.classification_id group by a.name;
+    </select>
+</mapper>
