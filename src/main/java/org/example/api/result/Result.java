@@ -1,4 +1,4 @@
-package result;
+package org.example.api.result;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

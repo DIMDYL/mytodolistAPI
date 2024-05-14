@@ -13,6 +13,5 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtProperties {
   private String key;
-  
   private int expiration;
 }

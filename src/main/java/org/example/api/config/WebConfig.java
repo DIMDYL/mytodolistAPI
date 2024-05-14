@@ -1,6 +1,7 @@
 package org.example.api.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.api.interceptor.UserLoginInterceptor;
 import org.example.api.josn.JacksonObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -13,9 +14,11 @@ import java.util.List;
 
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
-
+    @Autowired
+    private UserLoginInterceptor userLoginInterceptor;
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(userLoginInterceptor).addPathPatterns("/**");
     }
     protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
