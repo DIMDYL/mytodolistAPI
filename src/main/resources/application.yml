@@ -16,5 +16,5 @@ spring:
     username:  # 数据库用户名
     password:  # 数据库密码
 jwt:
-  expiration: 360000000 # token 过期时间
+  expiration:  # token 过期时间
   key:  # token 加密解密密钥
