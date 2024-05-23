@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.api.mapper.UserMapper">
+
+    <select id="queryUser" parameterType="User" resultType="User">
+           SELECT id,account_name,user_name,password,image,email,create_time,status
+           FROM user
+           <where>
+                <if test="id != null">AND id = #{id}</if>
+                <if test="accountName != null">AND account_name = #{accountName}</if>
+                <if test="userName != null">AND user_name = #{userName}</if>
+                <if test="password != null">AND password = #{password}</if>
+                <if test="image != null">AND image = #{image}</if>
+                <if test="email != null">AND email = #{email}</if>
+                <if test="createTime != null">AND create_time = #{createTime}</if>
+                <if test="status != null">AND status = #{status}</if>
+           </where>
+    </select>
+
+    <insert id="insertOne" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (account_name, user_name, password, image, email, create_time, status)
+            value(#{accountName},#{userName},#{password},#{image},#{email},#{createTime}, #{status})
+    </insert>
+
+    <update id="updateUserInfo" parameterType="User">
+        UPDATE user
+        <set>
+            <if test="accountName != null">account_name = #{accountName},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

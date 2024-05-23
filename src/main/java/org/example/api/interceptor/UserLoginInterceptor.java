@@ -9,6 +9,7 @@ import org.example.api.result.Result;
 import org.example.api.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,8 +21,12 @@ public class UserLoginInterceptor implements HandlerInterceptor {
     private JwtProperties jwtProperties;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+//        对于静态请求，直接通过
+        if(!(handler instanceof HandlerMethod)){
+            return true;
+        }
         // 获取token
-        String token = request.getHeader("token");
+        String token = request.getHeader(jwtProperties.getUserToken());
         // 如果token为空
         if (token == "" || token == null){
             // 将错误信息对象转换为json
@@ -34,7 +39,7 @@ public class UserLoginInterceptor implements HandlerInterceptor {
         try {
             Claims claims = JwtUtils.ParseJWT(token, jwtProperties.getKey());
             // 获取用户id
-            Integer id = (Integer) claims.get("userid");
+            Integer id = (Integer) claims.get(jwtProperties.getUserId());
             // 用户id存入本地线程
             BaseContext.setUserId(id);
         }catch (Exception e){

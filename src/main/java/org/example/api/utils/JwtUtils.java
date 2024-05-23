@@ -15,7 +15,7 @@ public class JwtUtils {
     return Jwts.builder()
       .signWith(SignatureAlgorithm.HS256, jwtProperties.getKey().getBytes()) // 加密方式，加密密钥
       .setClaims(data) // 添加参数
-      .setExpiration(new Date(System.currentTimeMillis() + 7200000L)) // 过期时间
+      .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration())) // 过期时间
       .compact();
   }
   

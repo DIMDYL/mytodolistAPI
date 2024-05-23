@@ -13,5 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtProperties {
   private String key;
-  private int expiration;
+  private Long expiration;
+  private String userId;
+  private String userToken;
 }
