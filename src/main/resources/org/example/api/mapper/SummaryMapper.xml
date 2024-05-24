@@ -22,4 +22,9 @@
     <delete id="delete">
         delete from summary where id = #{id}
     </delete>
+    <select id="scrollQuery" resultType="Summary">
+         select id,user_id,content,create_time,update_time from summary
+         where user_id = #{userId}
+         limit #{index},#{number}
+    </select>
 </mapper>

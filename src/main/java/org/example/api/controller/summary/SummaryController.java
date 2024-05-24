@@ -2,15 +2,18 @@ package org.example.api.controller.summary;
 
 import org.example.api.pojo.dto.SummaryAddDTO;
 import org.example.api.pojo.dto.SummaryEditDTO;
+import org.example.api.pojo.dto.SummaryScrollQueryDTO;
+import org.example.api.pojo.entity.Summary;
+import org.example.api.result.PageResult;
 import org.example.api.result.Result;
 import org.example.api.service.SummaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @RestController
 @RequestMapping("/summary")
@@ -42,9 +45,25 @@ public class SummaryController {
         return Result.success();
     }
 
+    /**
+     * 添加个人总结
+     * @param dto
+     * @return
+     */
     @PostMapping("/add")
     public Result add(@RequestBody @Validated SummaryAddDTO dto){
         service.add(dto);
         return Result.success();
+    }
+
+    /**
+     * 滚动查询
+     * @param dto
+     * @return
+     */
+    @GetMapping("/scrollQuery")
+    public Result scrollQuery(@Validated SummaryScrollQueryDTO dto){
+        List<Summary> summaries = service.scrollQuery(dto);
+        return Result.success(summaries);
     }
 }
