@@ -1,7 +1,6 @@
 package org.example.api.service.impl;
 
 import org.example.api.content.IdentifyingCodeMsg;
-import org.example.api.content.CommonMsg;
 import org.example.api.content.FileMsg;
 import org.example.api.content.user.UserMsg;
 import org.example.api.content.user.UserStatusMsg;
@@ -134,17 +133,10 @@ public class UserServiceImpl implements UserService {
      * @param identifyingCode
      */
     @Override
-    public void modifyUserInfo(String id, MultipartFile image, String userName, String email, String identifyingCode) {
+    public void modifyUserInfo(Long id, MultipartFile image, String userName, String email, String identifyingCode) {
 //  ①数据准备
         String imagePath = "";
-        Long id_ = null;
 //  ②验证
-//     id类型
-       try{
-           id_ = Long.valueOf(id);
-       }catch (Exception e){
-           throw new ModifyUserInfoFailedException(CommonMsg.INVALID_ARGUMENT);
-       }
 //     验证码是否正确  ? 为什么我不使用constrain? ①不能对象封装 ②需要同时有email + checkingCode
         if(!this.checkingCodeIsCorrect(email,identifyingCode)) {
             throw new SignupFailedException(IdentifyingCodeMsg.CHECKING_CODE_INCORRECT);
@@ -161,7 +153,7 @@ public class UserServiceImpl implements UserService {
 
 //  ④更新数据
         User user = new User();
-        user.setId(id_);
+        user.setId(id);
         user.setImage(imagePath);
         user.setUserName(userName);
         user.setEmail(email);

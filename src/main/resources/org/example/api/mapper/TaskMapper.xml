@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.api.mapper.TaskMapper">
+
+    <select id="pageQuery" parameterType="TaskPageQueryDTO" resultType="Task">
+            SELECT id, user_id, content, is_limited_time, limited_time, status, create_time
+            FROM task
+            where user_id = #{userId} AND
+                is_limited_time = #{isLimitedTime} AND
+                status = #{status}
+            order by
+            <if test="isLimitedTime == 1">
+                limited_time asc
+            </if>
+            <if test="isLimitedTime == 0">
+                create_time asc
+            </if>
+    </select>
+
+    <update id="updateTask" parameterType="Task">
+        UPDATE task
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="isLimitedTime != null">is_limited_time = #{isLimitedTime},</if>
+            <if test="limitedTime != null">limited_time = #{limitedTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <insert id="addTask" parameterType="Task">
+            INSERT INTO task (user_id, content, is_limited_time, limited_time, status, create_time)
+            VALUES (#{userId}, #{content}, #{isLimitedTime}, #{limitedTime}, #{status}, #{createTime})
+    </insert>
+</mapper>

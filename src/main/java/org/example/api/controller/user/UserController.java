@@ -95,7 +95,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/edit")
-    public Result modifyUserInfo(@NotBlank(message = UserMsg.NO_USER_ID) String id, @Img MultipartFile image,
+    public Result modifyUserInfo(@NotNull(message = UserMsg.NO_USER_ID) Long id, @Img MultipartFile image,
                                  @NotBlank(message = UserMsg.NO_USER_NAME) String userName,
                                  @NotBlank(message = UserMsg.NO_EMAIL) @Email String email,
                                  @NotBlank(message = UserMsg.NO_IDENTIFYING_CODE) String identifyingCode){

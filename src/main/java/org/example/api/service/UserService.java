@@ -16,5 +16,5 @@ public interface UserService {
 
     User signup(UserSignupDTO dto);
 
-    void modifyUserInfo(String id, MultipartFile image, String userName, String email, String identifyingCode);
+    void modifyUserInfo(Long id, MultipartFile image, String userName, String email, String identifyingCode);
 }

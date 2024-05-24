@@ -5,6 +5,7 @@ import org.example.api.content.FileMsg;
 import org.example.api.exception.BaseException;
 import org.example.api.result.Result;
 import org.springframework.mail.MailException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -60,8 +61,8 @@ public class HandlerException {
         return Result.error(FileMsg.FILE_SIZE_LIMIT_EXCEED);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Result MethodArgumentNotValidException(MethodArgumentNotValidException e){
+    @ExceptionHandler({MethodArgumentNotValidException.class,BindException.class})
+    public Result MethodArgumentNotValidException(BindException e){
         List<String> errorList = new ArrayList<>();
 //      ①获取错误信息表
         BindingResult bindingResult = e.getBindingResult();
@@ -83,4 +84,5 @@ public class HandlerException {
 
         return Result.error(errorList.toString());
     }
+
 }
