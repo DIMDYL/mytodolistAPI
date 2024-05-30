@@ -1,0 +1,51 @@
+# 系统属性 -------------------------------------
+# mybatis
+mybatis:
+  mapper-locations: classpath:mappers/*xml
+  type-aliases-package: org.example.api.pojo
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # mybatis在控制台输出日志
+    map-underscore-to-camel-case: true # 驼峰命名
+# 应用服务 WEB 访问端口
+server:
+  port: 8080 # 启动端口
+  servlet:
+    context-path: /mytodolist
+# 核心配置
+spring:
+  # 激活配置文件
+  profiles:
+    active: local
+  # 数据库
+  datasource:
+    driver-class-name: ${local.datasource.driver-class-name}
+    url: ${local.datasource.url}
+    #username:  mytodolist # 数据库用户名
+    #password: mytodolist  # 数据库密码
+  # redis数据库
+  redis:
+    password: ${local.redis.password}
+    port: ${local.redis.port}
+    host: ${local.redis.host}
+  # 邮箱
+  mail:
+#    邮箱的邮箱号
+    username: ${local.email.username}
+#    邮箱的smtp等服务的授权码
+    password: ${local.email.password}
+#    邮箱的smtp的服务器
+    host: smtp.qq.com
+  # 服务项
+  servlet:
+    # 文件
+    multipart:
+      # 单文件最大上传大小   10MB
+      max-file-size: 10MB
+# 自定义属性 -----------------------------------------
+jwt:
+  expiration: 604800000  # token 过期时间 一周
+  key: mytodolist # token 加密解密密钥
+  user-id: userId
+  user-token: token
+upload:
+  directory: img
