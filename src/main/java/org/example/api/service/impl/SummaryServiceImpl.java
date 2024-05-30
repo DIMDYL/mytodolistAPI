@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -50,15 +51,16 @@ public class SummaryServiceImpl implements SummaryService {
      * @param dto
      */
     @Override
-    public void add(SummaryAddDTO dto) {
+    public Summary add(SummaryAddDTO dto) {
 //        ①封装数据
         Summary summary = new Summary();
         BeanUtils.copyProperties(dto,summary);
 
-        summary.setCreateTime(LocalDateTime.now());
+        summary.setCreateTime(LocalDate.now());
         summary.setUpdateTime(LocalDateTime.now());
 //        ②添加信息
         mapper.add(summary);
+        return summary;
     }
 
     /**
@@ -69,11 +71,20 @@ public class SummaryServiceImpl implements SummaryService {
     @Override
     public List<Summary> scrollQuery(SummaryScrollQueryDTO dto) {
 //       ①数据封装
-        Integer index = dto.getNumber()*(dto.getScrollTimes()-1);
-        Integer number = dto.getNumber();
 //       ②查询数据
-         List<Summary> summaries = mapper.scrollQuery(index,number,dto.getUserId());
+         List<Summary> summaries = mapper.scrollQuery(dto.getStart(),dto.getNumber(),dto.getUserId());
          return summaries;
+    }
+
+    /**
+     * 获取个人用户的总结篇数
+     * @param id
+     * @return
+     */
+    @Override
+    public Integer getTotalNumber(Long id) {
+       Integer total =  mapper.queryTotalNumber(id);
+       return total;
     }
 
 }

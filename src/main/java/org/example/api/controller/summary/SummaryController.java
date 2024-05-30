@@ -1,5 +1,6 @@
 package org.example.api.controller.summary;
 
+import org.example.api.content.summary.SummaryMsg;
 import org.example.api.pojo.dto.SummaryAddDTO;
 import org.example.api.pojo.dto.SummaryEditDTO;
 import org.example.api.pojo.dto.SummaryScrollQueryDTO;
@@ -31,7 +32,7 @@ public class SummaryController {
     @PutMapping("/edit")
     public Result edit(@RequestBody @Validated SummaryEditDTO dto){
            service.edit(dto);
-           return Result.success();
+           return Result.success(SummaryMsg.EDIT_SUMMARY_SUCCESS);
     }
 
     /**
@@ -40,9 +41,9 @@ public class SummaryController {
      * @return
      */
     @DeleteMapping("/{id}")
-    public Result delete(@PathVariable @NotNull @Min(1) Long id){
+    public Result delete(@PathVariable @NotNull @Min(0) Long id){
         service.delete(id);
-        return Result.success();
+        return Result.success(SummaryMsg.DELETE_SUMMARY_SUCCESS);
     }
 
     /**
@@ -51,9 +52,9 @@ public class SummaryController {
      * @return
      */
     @PostMapping("/add")
-    public Result add(@RequestBody @Validated SummaryAddDTO dto){
-        service.add(dto);
-        return Result.success();
+    public Result<Summary> add(@RequestBody @Validated SummaryAddDTO dto){
+        Summary object = service.add(dto);
+        return Result.success(SummaryMsg.ADD_SUMMARY_SUCCESS,object);
     }
 
     /**
@@ -65,5 +66,11 @@ public class SummaryController {
     public Result scrollQuery(@Validated SummaryScrollQueryDTO dto){
         List<Summary> summaries = service.scrollQuery(dto);
         return Result.success(summaries);
+    }
+
+    @GetMapping("/getTotalNumber/{id}")
+    public Result getTotalNumber(@PathVariable @NotNull Long id){
+        Integer total = service.getTotalNumber(id);
+        return Result.success(total);
     }
 }

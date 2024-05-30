@@ -6,7 +6,9 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.sql.Time;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 public class TaskAddDTO {
@@ -34,5 +36,5 @@ public class TaskAddDTO {
     /**
      * 限时时间 {不能为空}
      */
-    private LocalDateTime limitedTime;
+    private LocalTime limitedTime;
 }

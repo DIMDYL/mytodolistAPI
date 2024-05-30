@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.api.mapper.SummaryMapper">
-    <insert id="add" parameterType="Summary">
+    <insert id="add" parameterType="Summary" keyProperty="id" useGeneratedKeys="true">
         insert into summary(user_id,content,create_time,update_time)
         value(#{userId},#{content},#{createTime},#{updateTime})
     </insert>
@@ -25,6 +25,11 @@
     <select id="scrollQuery" resultType="Summary">
          select id,user_id,content,create_time,update_time from summary
          where user_id = #{userId}
+         order by create_time asc
          limit #{index},#{number}
+
+    </select>
+    <select id="queryTotalNumber" resultType="integer">
+        select count(*) from summary where user_id = #{id}
     </select>
 </mapper>

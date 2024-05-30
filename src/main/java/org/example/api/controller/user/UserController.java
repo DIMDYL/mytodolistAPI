@@ -2,6 +2,7 @@ package org.example.api.controller.user;
 
 import org.apache.logging.log4j.message.Message;
 import org.example.api.constrain.annotation.Img;
+import org.example.api.content.IdentifyingCodeMsg;
 import org.example.api.content.user.UserMsg;
 import org.example.api.pojo.dto.*;
 import org.example.api.pojo.entity.User;
@@ -34,6 +35,11 @@ public class UserController {
     @Autowired
     private JwtProperties jwtProperties;
 
+
+    @GetMapping("/verifyUser")
+    public Result verifyUser(){
+        return Result.success();
+    }
     /**
      * 登录
      *
@@ -55,11 +61,6 @@ public class UserController {
         return Result.success(vo);
     }
 
-    /**
-     * 注册
-     * @param dto
-     * @return
-     */
     @PostMapping("/signup")
     public Result signup(@RequestBody @Validated UserSignupDTO dto){
 //        ①注册用户
@@ -88,6 +89,11 @@ public class UserController {
     }
 
 
+    /**
+     * 注册
+     * @param dto
+     * @return
+     */
 
     /**
      * 编辑用户信息
@@ -100,18 +106,17 @@ public class UserController {
                                  @NotBlank(message = UserMsg.NO_EMAIL) @Email String email,
                                  @NotBlank(message = UserMsg.NO_IDENTIFYING_CODE) String identifyingCode){
         userService.modifyUserInfo(id, image, userName, email, identifyingCode);
-        return Result.success();
+        return Result.success(UserMsg.EDIT_USER_INFO_SUCCESS);
     }
     /**
      * 发送验证码
      * @param identifyingCodeDTO
      * @return
      */
-    @PostMapping("/sendCheckingCode")
+    @PostMapping("/sendIdentifyingCode")
     public Result sendCheckingCode(@RequestBody @Validated IdentifyingCodeDTO identifyingCodeDTO){
           userService.sendCheckingCode(identifyingCodeDTO);
-
-          return Result.success();
+          return Result.success(IdentifyingCodeMsg.SEND_CHECKING_CODE_SUCCESS);
     }
 
 }

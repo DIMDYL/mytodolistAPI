@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 public class Task implements Serializable {
@@ -24,16 +25,15 @@ public class Task implements Serializable {
     /**
      * 是否是限时任务
      */
-    private int isLimitedTime;
+    private Integer isLimitedTime;
     /**
      * 到期时间
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime limitedTime;
+    private LocalTime limitedTime;
     /**
      * 任务状态  1:完成 0:未完成
      */
-    private int status;
+    private Integer status;
     /**
      * 创建时间 00000-00-00 00:00:00
      */

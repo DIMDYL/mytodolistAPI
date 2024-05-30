@@ -9,8 +9,8 @@ import javax.validation.constraints.NotNull;
 public class SummaryScrollQueryDTO {
 
     @NotNull
-    @Min(1)
-    private Integer scrollTimes;
+    @Min(0)
+    private Integer start;
 
     @NotNull
     @Min(1)

@@ -14,7 +14,9 @@ public interface SummaryService {
 
     void delete(Long id);
 
-    void add(SummaryAddDTO dto);
+    Summary add(SummaryAddDTO dto);
 
     List<Summary> scrollQuery(SummaryScrollQueryDTO dto);
+
+    Integer getTotalNumber(Long id);
 }

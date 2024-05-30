@@ -34,7 +34,13 @@ public class Result<T> implements Serializable {
     result.code = Integer.valueOf(1);
     return result;
   }
-  
+  public static <T> Result<T> success(String msg,T object){
+    Result<T> result = new Result<>();
+    result.setCode(1);
+    result.setMsg(msg);
+    result.setData(object);
+    return result;
+  }
   public static <T> Result<T> error(String msg) {
     Result<T> result = new Result();
     result.msg = msg;

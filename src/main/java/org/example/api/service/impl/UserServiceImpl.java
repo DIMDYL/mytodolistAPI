@@ -23,9 +23,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -80,6 +82,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
+    @RequestMapping
     public UserQueryVO queryUserById(Long id) {
 //  ①查询用户
         User user = new User();
@@ -91,8 +94,7 @@ public class UserServiceImpl implements UserService {
         }
 //  ②封装响应的用户数据
         UserQueryVO userQueryVO = new UserQueryVO();
-        BeanUtils.copyProperties(user,userQueryVO);
-
+        BeanUtils.copyProperties(queryUser,userQueryVO);
         return userQueryVO;
     }
 
@@ -116,7 +118,7 @@ public class UserServiceImpl implements UserService {
         //状态
         user.setStatus(UserStatusMsg.INVOKED);
         //加入时间
-        user.setCreateTime(LocalDateTime.now());
+        user.setCreateTime(LocalDate.now());
 
 //  ③添加信息
         userMapper.insertOne(user);
@@ -154,6 +156,7 @@ public class UserServiceImpl implements UserService {
 //  ④更新数据
         User user = new User();
         user.setId(id);
+        imagePath = "http://localhost:8080/mytodolist/img/"+imagePath;
         user.setImage(imagePath);
         user.setUserName(userName);
         user.setEmail(email);

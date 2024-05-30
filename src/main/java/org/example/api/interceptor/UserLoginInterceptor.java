@@ -21,7 +21,7 @@ public class UserLoginInterceptor implements HandlerInterceptor {
     private JwtProperties jwtProperties;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        对于静态请求，直接通过
+        //        对于静态请求，直接通过
         if(!(handler instanceof HandlerMethod)){
             return true;
         }

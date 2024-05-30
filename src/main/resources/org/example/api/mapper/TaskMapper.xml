@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.api.mapper.TaskMapper">
 
-    <select id="pageQuery" parameterType="TaskPageQueryDTO" resultType="Task">
+    <select id="query" parameterType="TaskQueryDTO" resultType="Task">
             SELECT id, user_id, content, is_limited_time, limited_time, status, create_time
             FROM task
             where user_id = #{userId} AND
@@ -15,6 +15,9 @@
             </if>
             <if test="isLimitedTime == 0">
                 create_time asc
+            </if>
+            <if test="start != null">
+                limit #{start},#{number}
             </if>
     </select>
 

@@ -15,5 +15,9 @@ public class UserMsg {
 
     public static final String NO_EMAIL ="邮箱为空";
     public static  final String NO_IDENTIFYING_CODE = "验证码为空";
+    public static  final String EDIT_USER_INFO_SUCCESS = "修改用户信息成功";
+    public static final String VERIFY_USER_SUCCESS = "用户合法";
+
+
 
 }

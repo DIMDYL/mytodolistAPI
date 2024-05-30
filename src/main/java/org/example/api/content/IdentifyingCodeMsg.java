@@ -11,4 +11,6 @@ public class IdentifyingCodeMsg {
     public static final String CHECKING_CODE_INCORRECT = "验证码不正确";
 
     public static final String SEND_CHECKING_CODE_FAILED ="发送验证码失败";
+    public static final String SEND_CHECKING_CODE_SUCCESS ="发送验证码成功";
+
 }

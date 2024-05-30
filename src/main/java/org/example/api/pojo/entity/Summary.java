@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -31,7 +32,7 @@ public class Summary {
      * 个人总结创建时间
      */
     @NotNull
-    private LocalDateTime createTime;
+    private LocalDate createTime;
     /**
      * 更新时间
      */

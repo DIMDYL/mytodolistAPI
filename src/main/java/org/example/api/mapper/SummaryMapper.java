@@ -19,4 +19,6 @@ public interface SummaryMapper {
     void add(Summary dto);
 
     List<Summary> scrollQuery(@Param("index") Integer index, @Param("number") Integer number, @Param("userId") Long userId);
+
+    Integer queryTotalNumber(Long id);
 }
