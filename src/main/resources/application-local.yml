@@ -1,11 +1,11 @@
 local:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ?
+    url: jdbc:mysql://localhost:3306/my_to_do_list
   email:
-    username: ?
-    password: ?
+    username: 3605821159@qq.com
+    password: fydwfszpauxqcgjd
   redis:
-    port: ?
-    host: ?
-    password: ?
+    port: 6666
+    host: localhost
+    password: 123456

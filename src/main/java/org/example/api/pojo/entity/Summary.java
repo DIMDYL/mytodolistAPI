@@ -32,7 +32,7 @@ public class Summary {
      * 个人总结创建时间
      */
     @NotNull
-    private LocalDate createTime;
+    private LocalDateTime createTime;
     /**
      * 更新时间
      */

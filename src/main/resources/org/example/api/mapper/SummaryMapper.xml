@@ -25,9 +25,8 @@
     <select id="scrollQuery" resultType="Summary">
          select id,user_id,content,create_time,update_time from summary
          where user_id = #{userId}
-         order by create_time asc
+         order by create_time desc
          limit #{index},#{number}
-
     </select>
     <select id="queryTotalNumber" resultType="integer">
         select count(*) from summary where user_id = #{id}

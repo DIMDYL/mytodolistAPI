@@ -56,7 +56,7 @@ public class SummaryServiceImpl implements SummaryService {
         Summary summary = new Summary();
         BeanUtils.copyProperties(dto,summary);
 
-        summary.setCreateTime(LocalDate.now());
+        summary.setCreateTime(LocalDateTime.now());
         summary.setUpdateTime(LocalDateTime.now());
 //        ②添加信息
         mapper.add(summary);
