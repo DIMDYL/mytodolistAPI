@@ -8,5 +8,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("upload")
 @Data
 public class UploadProperties {
-    private String directory;
+    private String targetDirectory;
 }

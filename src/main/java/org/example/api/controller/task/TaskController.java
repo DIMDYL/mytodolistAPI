@@ -1,8 +1,10 @@
 package org.example.api.controller.task;
 
 
+import org.apache.ibatis.annotations.Delete;
 import org.example.api.content.task.TaskMsg;
 import org.example.api.pojo.dto.TaskAddDTO;
+import org.example.api.pojo.dto.TaskEditDTO;
 import org.example.api.pojo.dto.TaskQueryDTO;
 import org.example.api.pojo.entity.Task;
 import org.example.api.result.Result;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -49,9 +52,40 @@ public class TaskController {
       return Result.success(TaskMsg.MODIFY_TASK_STATUS_SUCCESS);
     }
 
+    /**
+     * 添加任务
+     * @param dto
+     * @return
+     */
     @PostMapping("/addTask")
     public Result addTask(@RequestBody @Validated TaskAddDTO dto){
         taskService.addTask(dto);
         return Result.success(TaskMsg.ADD_TASK_SUCCESS);
     }
+
+
+    /**
+     * 根据task的Id删除任务
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/{id}")
+    public Result deleteTask(@PathVariable @Min(1) Long id){
+        taskService.deleteTaskById(id);
+        return Result.success(TaskMsg.DELETE_SUCCESS);
+    }
+
+    /**
+     * 编辑task内容
+     * @param taskEditDTO
+     * @return
+     */
+    @PutMapping("/edit")
+    public Result edit(@RequestBody @Validated TaskEditDTO taskEditDTO){
+        taskService.modifyContent(taskEditDTO);
+        return Result.success(TaskMsg.MODIFY_TASK_CONTENT_SUCCESS);
+    }
+
+
+
 }

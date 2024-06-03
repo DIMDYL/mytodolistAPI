@@ -26,7 +26,7 @@ public class UploadUtils {
      */
     public String upload(MultipartFile file) throws IOException {
         String fileName = ((int)Math.floor((Math.random()*1000)))+file.getOriginalFilename();
-        String targetPath = System.getProperty("user.dir")+"\\"+uploadProperties.getDirectory()+"\\"+fileName;
+        String targetPath = System.getProperty("user.dir")+"\\"+uploadProperties.getTargetDirectory()+"\\"+fileName;
         FileOutputStream outputStream = new FileOutputStream(targetPath);
 
         InputStream inputStream = file.getInputStream();

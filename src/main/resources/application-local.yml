@@ -2,7 +2,7 @@
 local:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ?
+    url: jdbc:mysql://localhost:3306/my_to_do_list?useSSL=false
   email:
     username: ?
     password: ?
@@ -10,4 +10,7 @@ local:
     port: ?
     host: ?
     password: ?
+  upload:
+    #  指定图片目录(在当前项目中) /currentProject/{targetDirectory}
+    targetDirectory: img
 

@@ -14,4 +14,6 @@ public interface TaskMapper {
     public void updateTask(Task task);
 
     public void addTask(Task task);
+
+    void deleteTaskById(Long id);
 }

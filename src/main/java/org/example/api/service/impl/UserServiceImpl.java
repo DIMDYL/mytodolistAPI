@@ -14,6 +14,7 @@ import org.example.api.pojo.dto.UserLoginDTO;
 import org.example.api.pojo.dto.UserSignupDTO;
 import org.example.api.pojo.entity.User;
 import org.example.api.pojo.vo.UserQueryVO;
+import org.example.api.properties.UploadProperties;
 import org.example.api.service.UserService;
 import org.example.api.utils.SendEmailUtils;
 import org.example.api.utils.UploadUtils;
@@ -35,6 +36,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
+    private UploadProperties uploadProperties;
+    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -44,6 +47,8 @@ public class UserServiceImpl implements UserService {
     private UploadUtils uploadUtils;
     @Autowired
     private RedisTemplate redisTemplate;
+
+
 
     /**
      * 登录
@@ -119,7 +124,8 @@ public class UserServiceImpl implements UserService {
         user.setStatus(UserStatusMsg.INVOKED);
         //加入时间
         user.setCreateTime(LocalDate.now());
-
+        //默认头像
+        user.setImage("http://localhost:8080/mytodolist/img/"+"3ea6beec64369c2642b92c6726f1epng.png");
 //  ③添加信息
         userMapper.insertOne(user);
 

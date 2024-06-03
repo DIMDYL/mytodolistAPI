@@ -47,5 +47,8 @@ jwt:
   key: mytodolist # token 加密解密密钥
   user-id: userId
   user-token: token
+
+
 upload:
-  directory: img
+#  图片上传到当前项目中指定的目录
+  targetDirectory: ${local.upload.targetDirectory}

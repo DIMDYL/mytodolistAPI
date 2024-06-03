@@ -26,9 +26,15 @@ public class ImgValidator implements ConstraintValidator<Img, MultipartFile> {
             return false;
         }
 //  获取文件后缀
-        String extend = img.getOriginalFilename().split("\\.")[1];
+        String[] extends_ = img.getOriginalFilename().split("\\.");
+        String extend = extends_[extends_.length-1];
 //   遍历是否符合其中任意一个后缀
         boolean result = Arrays.stream(imgExtends).anyMatch(a->a.equals(extend));
+        if(!result){
+            //不满足图片类型要求
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("不满足图片类型要求").addConstraintViolation();
+        }
         return result;
     }
 

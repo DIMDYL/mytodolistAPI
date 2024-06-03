@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.jsonwebtoken.Claims;
 import org.example.api.content.InterceptorMsg;
 import org.example.api.context.BaseContext;
+import org.example.api.exception.BaseException;
 import org.example.api.properties.JwtProperties;
 import org.example.api.result.Result;
 import org.example.api.utils.JwtUtils;
@@ -44,7 +45,7 @@ public class UserLoginInterceptor implements HandlerInterceptor {
             BaseContext.setUserId(id);
         }catch (Exception e){
             String error = JSONObject.toJSONString(Result.error(InterceptorMsg.TokenError));
-            return false;
+            throw new BaseException(InterceptorMsg.TOKEN_INVALID);
         }
         return true;
     }

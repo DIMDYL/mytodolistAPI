@@ -4,6 +4,7 @@ import org.example.api.content.task.TaskMsg;
 import org.example.api.exception.AddTaskFailedException;
 import org.example.api.mapper.TaskMapper;
 import org.example.api.pojo.dto.TaskAddDTO;
+import org.example.api.pojo.dto.TaskEditDTO;
 import org.example.api.pojo.dto.TaskQueryDTO;
 import org.example.api.pojo.entity.Task;
 import org.example.api.service.TaskService;
@@ -68,5 +69,17 @@ public class TaskServiceImpl implements TaskService {
         task.setCreateTime(LocalDateTime.now());
 //        ②添加数据
         mapper.addTask(task);
+    }
+
+    @Override
+    public void deleteTaskById(Long id) {
+        mapper.deleteTaskById(id);
+    }
+
+    @Override
+    public void modifyContent(TaskEditDTO taskEditDTO) {
+        Task task = new Task();
+        BeanUtils.copyProperties(taskEditDTO,task);
+        mapper.updateTask(task);
     }
 }
