@@ -1,17 +1,19 @@
 package org.example.api.service.impl;
 
-import org.example.api.content.IdentifyingCodeMsg;
-import org.example.api.content.FileMsg;
+import cn.hutool.db.dialect.DialectFactory;
+import org.bouncycastle.crypto.Digest;
+import org.example.api.content.common.IdentifyingCodeMsg;
+import org.example.api.content.common.FileMsg;
+import org.example.api.content.common.RedisMsg;
 import org.example.api.content.user.UserMsg;
 import org.example.api.content.user.UserStatusMsg;
-import org.example.api.exception.LoginFailedException;
-import org.example.api.exception.ModifyUserInfoFailedException;
-import org.example.api.exception.QueryFailedException;
-import org.example.api.exception.SignupFailedException;
+import org.example.api.context.BaseContext;
+import org.example.api.exception.*;
 import org.example.api.mapper.UserMapper;
 import org.example.api.pojo.dto.IdentifyingCodeDTO;
 import org.example.api.pojo.dto.UserLoginDTO;
 import org.example.api.pojo.dto.UserSignupDTO;
+import org.example.api.pojo.dto.VerifyIdentityDTO;
 import org.example.api.pojo.entity.User;
 import org.example.api.pojo.vo.UserQueryVO;
 import org.example.api.properties.UploadProperties;
@@ -27,9 +29,8 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -111,11 +112,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User signup(UserSignupDTO dto) {
 //  ① 检测验证码是否正确
-        if(!this.checkingCodeIsCorrect(dto.getEmail(),dto.getIdentifyingCode())){
+        String key = RedisMsg.IDENTIFYING_PREFIX[IdentifyingCodeMsg.SIGNUP]+dto.getEmail();
+        if(!this.checkingCodeIsCorrect(key,dto.getIdentifyingCode())){
             throw new SignupFailedException(IdentifyingCodeMsg.CHECKING_CODE_INCORRECT);
         }
-
-//  ②封装用户信息
+//  ②判断邮箱是否已被绑定
+        User user_ = new User();
+        user_.setEmail(dto.getEmail());
+        if(userMapper.queryUser(user_) != null){
+            throw new BaseException(UserMsg.EXISTED_EMAIL);
+        }
+//  ③封装用户信息
         User user = new User();
         BeanUtils.copyProperties(dto,user);
         //密码
@@ -143,18 +150,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public void modifyUserInfo(Long id, MultipartFile image, String userName, String email, String identifyingCode) {
 //  ①数据准备
-        String imagePath = "";
+        String imagePath = null;
 //  ②验证
 //     验证码是否正确  ? 为什么我不使用constrain? ①不能对象封装 ②需要同时有email + checkingCode
-        if(!this.checkingCodeIsCorrect(email,identifyingCode)) {
+        String key = RedisMsg.IDENTIFYING_PREFIX[IdentifyingCodeMsg.EDIT_INFO]+email;
+        if(!this.checkingCodeIsCorrect(key,identifyingCode)) {
             throw new SignupFailedException(IdentifyingCodeMsg.CHECKING_CODE_INCORRECT);
         }
 
 //  ③存储图片文件
-        try {
-            imagePath = uploadUtils.upload(image);
-        } catch (Exception e) {
-            throw new ModifyUserInfoFailedException(FileMsg.UPLOAD_IMAGE_FAILED);
+        if(image != null) {
+            try {
+                imagePath = "http://localhost:8080/mytodolist/img/"+uploadUtils.upload(image);
+            } catch (Exception e) {
+                throw new ModifyUserInfoFailedException(FileMsg.UPLOAD_IMAGE_FAILED);
+            }
         }
 
 
@@ -162,12 +172,12 @@ public class UserServiceImpl implements UserService {
 //  ④更新数据
         User user = new User();
         user.setId(id);
-        imagePath = "http://localhost:8080/mytodolist/img/"+imagePath;
         user.setImage(imagePath);
         user.setUserName(userName);
         user.setEmail(email);
         userMapper.updateUserInfo(user);
     }
+
 
     /**
      * 发送验证码
@@ -190,34 +200,91 @@ public class UserServiceImpl implements UserService {
         String title = "";
         String content ="";
         int checkingCode = (int)(Math.floor(Math.random()*1000000));
-
         if(type == IdentifyingCodeMsg.SIGNUP){
             title = "用户注册验证码";
         }else if(type == IdentifyingCodeMsg.EDIT_INFO){
             title = "编辑用户验证码";
+        }else if(type == IdentifyingCodeMsg.RESTORE_USER){
+            title = "重置用户验证码";
         }
         content = "验证码为: "+checkingCode;
 
 /**
  *   ②发送验证码
  */
-        emailUtils.sendEmail(targetEmail,title,content);
+        emailUtils.sendSimpleEmail(targetEmail,title,content);
 
 /**
  *  ③存储验证码  (ed: 过期时间 {一分钟})
  */
+        String key = RedisMsg.IDENTIFYING_PREFIX[type]+targetEmail;
+        Long ttl = RedisMsg.IDENTIFYING_TTL[type];
         ValueOperations valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(targetEmail,checkingCode+"", Duration.ofSeconds(60));
+        valueOperations.set(key,checkingCode+"", ttl,TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void modifyPassword(String password) {
+//        密码加密
+        String s = DigestUtils.md5DigestAsHex(password.getBytes());
+//        更新密码
+        User user = new User();
+        user.setPassword(s);
+        user.setId(BaseContext.getUserId());
+
+        userMapper.updateUserInfo(user);
+    }
+
+    /**
+     * 获取用户
+     * @param userName
+     * @return
+     */
+    @Override
+    public String isExistedForUserWithUserName(String userName) {
+//        判断是否存在
+        User user = new User();
+        user.setUserName(userName);
+        User userInfo = userMapper.queryUser(user);
+
+        if(userInfo == null){
+            throw new BaseException(UserMsg.NO_USER);
+        }
+//        返回邮箱信息
+        return userInfo.getEmail();
+    }
+
+    /**
+     * 身份校验
+     * @param verifyIdentityDTO
+     * @return
+     */
+    @Override
+    public User verifyIdentity(VerifyIdentityDTO verifyIdentityDTO) {
+//        校验验证码是否current
+        String key = RedisMsg.IDENTIFYING_PREFIX[IdentifyingCodeMsg.RESTORE_USER] +
+                     verifyIdentityDTO.getEmail();
+        if(!checkingCodeIsCorrect(key,verifyIdentityDTO.getIdentifyingCode())){
+            throw new BaseException(IdentifyingCodeMsg.CHECKING_CODE_INCORRECT);
+        }
+
+//        获取用户信息
+        User user = new User();
+        user.setEmail(verifyIdentityDTO.getEmail());
+        User userInfo = userMapper.queryUser(user);
+
+//        返回用户信息
+        return userInfo;
     }
 
     /**
      * 内部方法 {检验验证码是否正确}
-     * @param email
+     * @param key
      * @param target
      * @return
      */
-    private boolean checkingCodeIsCorrect(String email,String target){
-        Object o = redisTemplate.opsForValue().get(email);
+    private boolean checkingCodeIsCorrect(String key,String target){
+        Object o = redisTemplate.opsForValue().get(key);
         if(o == null){
             return false;
         }

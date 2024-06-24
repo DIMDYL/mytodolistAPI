@@ -1,10 +1,12 @@
-package org.example.api.content;
+package org.example.api.content.common;
 
 public class IdentifyingCodeMsg {
 //    注册用户的验证码
     public static final Integer SIGNUP = 1;
 //    编辑用户信息的验证码
     public static final Integer EDIT_INFO = 2;
+// 用户验证码
+    public static final Integer RESTORE_USER = 3;
 
 
 //    验证码消息

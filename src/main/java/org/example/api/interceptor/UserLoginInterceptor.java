@@ -2,7 +2,7 @@ package org.example.api.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import io.jsonwebtoken.Claims;
-import org.example.api.content.InterceptorMsg;
+import org.example.api.content.common.InterceptorMsg;
 import org.example.api.context.BaseContext;
 import org.example.api.exception.BaseException;
 import org.example.api.properties.JwtProperties;
@@ -40,7 +40,10 @@ public class UserLoginInterceptor implements HandlerInterceptor {
         try {
             Claims claims = JwtUtils.ParseJWT(token, jwtProperties.getKey());
             // 获取用户id
-            Integer id = (Integer) claims.get(jwtProperties.getUserId());
+            Object o = claims.get(jwtProperties.getUserId());
+            long id = o.getClass() == Integer.class?
+                      ((Integer) o).longValue():
+                      (long)o;
             // 用户id存入本地线程
             BaseContext.setUserId(id);
         }catch (Exception e){

@@ -35,7 +35,7 @@ public class TaskController {
     @GetMapping("/query")
     public Result query(@Validated TaskQueryDTO dto){
         List<Task> taskScrollQuery = taskService.query(dto);
-        return Result.success(taskScrollQuery);
+        return Result.success(null,taskScrollQuery);
     }
 
 
@@ -49,7 +49,7 @@ public class TaskController {
     public Result modifyStatus(@PathVariable @NotNull Long id,
                                @PathVariable @NotNull @Range(min = 0,max = 1) Integer status){
       taskService.modifyStatus(id,status);
-      return Result.success(TaskMsg.MODIFY_TASK_STATUS_SUCCESS);
+      return Result.success(TaskMsg.MODIFY_TASK_STATUS_SUCCESS,null);
     }
 
     /**
@@ -60,7 +60,7 @@ public class TaskController {
     @PostMapping("/addTask")
     public Result addTask(@RequestBody @Validated TaskAddDTO dto){
         taskService.addTask(dto);
-        return Result.success(TaskMsg.ADD_TASK_SUCCESS);
+        return Result.success(TaskMsg.ADD_TASK_SUCCESS,null);
     }
 
 
@@ -72,7 +72,7 @@ public class TaskController {
     @DeleteMapping("/{id}")
     public Result deleteTask(@PathVariable @Min(1) Long id){
         taskService.deleteTaskById(id);
-        return Result.success(TaskMsg.DELETE_SUCCESS);
+        return Result.success(TaskMsg.DELETE_SUCCESS,null);
     }
 
     /**
@@ -83,7 +83,7 @@ public class TaskController {
     @PutMapping("/edit")
     public Result edit(@RequestBody @Validated TaskEditDTO taskEditDTO){
         taskService.modifyContent(taskEditDTO);
-        return Result.success(TaskMsg.MODIFY_TASK_CONTENT_SUCCESS);
+        return Result.success(TaskMsg.MODIFY_TASK_CONTENT_SUCCESS,null);
     }
 
 

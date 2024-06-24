@@ -1,7 +1,7 @@
 package org.example.api.handler;
 
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
-import org.example.api.content.FileMsg;
+import org.example.api.content.common.FileMsg;
 import org.example.api.exception.BaseException;
 import org.example.api.result.Result;
 import org.springframework.mail.MailException;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
-import javax.validation.UnexpectedTypeException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;

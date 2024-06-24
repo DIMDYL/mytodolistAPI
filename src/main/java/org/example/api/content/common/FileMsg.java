@@ -1,4 +1,4 @@
-package org.example.api.content;
+package org.example.api.content.common;
 
 public class FileMsg {
     public static final String UPLOAD_IMAGE_FAILED = "上传文件失败";

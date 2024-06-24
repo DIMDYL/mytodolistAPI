@@ -3,14 +3,14 @@ local:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/my_to_do_list?useSSL=false
-  email:
-    username: ?
-    password: ?
-  redis:
-    port: ?
-    host: ?
-    password: ?
   upload:
     #  指定图片目录(在当前项目中) /currentProject/{targetDirectory}
     targetDirectory: img
-
+  redis:
+    port: 6666
+    password: 123456
+    host: localhost
+    database: 1
+  email:
+    username: 3605821159@qq.com
+    password: yzekreppcnsecich

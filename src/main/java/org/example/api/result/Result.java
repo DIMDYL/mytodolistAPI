@@ -20,20 +20,6 @@ public class Result<T> implements Serializable {
     result.code = Integer.valueOf(1);
     return result;
   }
-  
-  public static <T> Result<T> success(T object) {
-    Result<T> result = new Result<>();
-    result.data = object;
-    result.code = Integer.valueOf(1);
-    return result;
-  }
-  
-  public static <T> Result<T> success(String msg) {
-   Result<T> result = new Result<>();
-    result.msg = msg;
-    result.code = Integer.valueOf(1);
-    return result;
-  }
   public static <T> Result<T> success(String msg,T object){
     Result<T> result = new Result<>();
     result.setCode(1);
@@ -43,8 +29,8 @@ public class Result<T> implements Serializable {
   }
   public static <T> Result<T> error(String msg) {
     Result<T> result = new Result();
-    result.msg = msg;
-    result.code = Integer.valueOf(0);
+    result.setMsg(msg);
+    result.setCode(Integer.valueOf(0));
     return result;
   }
 }

@@ -1,8 +1,6 @@
 package org.example.api.constrain.validator;
 
 import org.example.api.constrain.annotation.Img;
-import org.example.api.content.FileMsg;
-import org.example.api.exception.ModifyUserInfoFailedException;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintValidator;

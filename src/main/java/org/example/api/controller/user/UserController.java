@@ -1,8 +1,7 @@
 package org.example.api.controller.user;
 
-import org.apache.logging.log4j.message.Message;
 import org.example.api.constrain.annotation.Img;
-import org.example.api.content.IdentifyingCodeMsg;
+import org.example.api.content.common.IdentifyingCodeMsg;
 import org.example.api.content.user.UserMsg;
 import org.example.api.pojo.dto.*;
 import org.example.api.pojo.entity.User;
@@ -11,6 +10,7 @@ import org.example.api.pojo.vo.UserQueryVO;
 import org.example.api.properties.JwtProperties;
 import org.example.api.result.Result;
 import org.example.api.service.UserService;
+import org.example.api.utils.HidingInfoUtil;
 import org.example.api.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -36,9 +36,30 @@ public class UserController {
     private JwtProperties jwtProperties;
 
 
+    /**
+     * 校验用户合法性
+     * @return
+     */
     @GetMapping("/verifyUser")
     public Result verifyUser(){
         return Result.success();
+    }
+
+    /**
+     * 校验身份信息
+     * @param verifyIdentityDTO
+     * @return
+     */
+    @PostMapping("/verifyIdentity")
+    public Result verifyIdentity(@RequestBody VerifyIdentityDTO verifyIdentityDTO){
+//        校验是否合法
+      User user = userService.verifyIdentity(verifyIdentityDTO);
+//        生成token
+      Map map = new HashMap();
+      map.put(jwtProperties.getUserId(),user.getId());
+      String token = JwtUtils.CreateJWT(jwtProperties, map);
+//        返回token
+      return Result.success(null,token);
     }
     /**
      * 登录
@@ -58,9 +79,14 @@ public class UserController {
         UserLoginVO vo = new UserLoginVO();
         vo.setId(user.getId());
         vo.setToken(token);
-        return Result.success(vo);
+        return Result.success(null,vo);
     }
 
+    /**
+     * 注册
+     * @param dto
+     * @return
+     */
     @PostMapping("/signup")
     public Result signup(@RequestBody @Validated UserSignupDTO dto){
 //        ①注册用户
@@ -74,7 +100,7 @@ public class UserController {
         UserLoginVO vo = new UserLoginVO();
         vo.setId(user.getId());
         vo.setToken(token);
-        return Result.success(vo);
+        return Result.success(null,vo);
     }
 
     /**
@@ -85,16 +111,8 @@ public class UserController {
     @GetMapping("/{id}")
     public Result queryUserById(@PathVariable @NotNull @Min(0) Long id){
         UserQueryVO userQueryVO = userService.queryUserById(id);
-        return Result.success(userQueryVO);
+        return Result.success(null,userQueryVO);
     }
-
-
-    /**
-     * 注册
-     * @param dto
-     * @return
-     */
-
     /**
      * 编辑用户信息
      * @param
@@ -106,17 +124,42 @@ public class UserController {
                                  @NotBlank(message = UserMsg.NO_EMAIL) @Email String email,
                                  @NotBlank(message = UserMsg.NO_IDENTIFYING_CODE) String identifyingCode){
         userService.modifyUserInfo(id, image, userName, email, identifyingCode);
-        return Result.success(UserMsg.EDIT_USER_INFO_SUCCESS);
+        return Result.success(UserMsg.EDIT_USER_INFO_SUCCESS,null);
     }
     /**
+     * 设置新密码
+     */
+    @PutMapping("/edit/{password}")
+    public Result modifyPassword(@PathVariable @NotBlank String password){
+        userService.modifyPassword(password);
+        return Result.success("密码设置成功",null);
+    }
+    /**
+     *  获取存在用户的邮箱(脱敏后的)
+     * @param userName
+     * @return
+     */
+    @GetMapping("/isExistedForUserWithUserName/{userName}")
+    public Result isExistedForUserWithUserName(@PathVariable @NotBlank String userName){
+//      获取邮箱
+        String email = userService.isExistedForUserWithUserName(userName);
+
+//      生成脱敏邮箱
+        String sEmail = HidingInfoUtil.emailHide(email);
+
+//      返回值
+        return Result.success(null,sEmail);
+    }
+
+ /**
      * 发送验证码
      * @param identifyingCodeDTO
      * @return
      */
     @PostMapping("/sendIdentifyingCode")
-    public Result sendCheckingCode(@RequestBody @Validated IdentifyingCodeDTO identifyingCodeDTO){
-          userService.sendCheckingCode(identifyingCodeDTO);
-          return Result.success(IdentifyingCodeMsg.SEND_CHECKING_CODE_SUCCESS);
+    public Result sendCheckingCode(@RequestBody @Validated IdentifyingCodeDTO identifyingCodeDTO) {
+        userService.sendCheckingCode(identifyingCodeDTO);
+        return Result.success(IdentifyingCodeMsg.SEND_CHECKING_CODE_SUCCESS,null);
     }
 
 }

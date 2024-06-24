@@ -2,13 +2,13 @@ package org.example.api.context;
 
 public class BaseContext {
 
-    public static ThreadLocal<Integer> threadLocal1 = new ThreadLocal<>();
+    public static ThreadLocal<Long> threadLocal1 = new ThreadLocal<>();
     // 用户id
-    public static void setUserId(Integer id) {
+    public static void setUserId(Long id) {
         threadLocal1.set(id);
     }
 
-    public static int getUserId() {
+    public static Long getUserId() {
         return threadLocal1.get();
     }
 

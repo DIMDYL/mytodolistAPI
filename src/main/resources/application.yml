@@ -27,6 +27,7 @@ spring:
     password: ${local.redis.password}
     port: ${local.redis.port}
     host: ${local.redis.host}
+    database: ${local.redis.database}
   # 邮箱
   mail:
 #    邮箱的邮箱号

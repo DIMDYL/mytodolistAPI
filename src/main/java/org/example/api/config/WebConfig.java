@@ -30,7 +30,11 @@ public class WebConfig extends WebMvcConfigurationSupport {
 //       拦截除登录，注册之外
         registry.addInterceptor(userLoginInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/login","/user/signup","/user/sendIdentifyingCode");
+                .excludePathPatterns("/user/login",
+                                     "/user/signup",
+                                     "/user/sendIdentifyingCode",
+                                     "/user/isExistedForUserWithUserName/**",
+                                     "/user/verifyIdentity");
     }
     protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();

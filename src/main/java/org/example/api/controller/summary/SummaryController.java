@@ -32,7 +32,7 @@ public class SummaryController {
     @PutMapping("/edit")
     public Result edit(@RequestBody @Validated SummaryEditDTO dto){
            service.edit(dto);
-           return Result.success(SummaryMsg.EDIT_SUMMARY_SUCCESS);
+           return Result.success(SummaryMsg.EDIT_SUMMARY_SUCCESS,null);
     }
 
     /**
@@ -43,7 +43,7 @@ public class SummaryController {
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable @NotNull @Min(0) Long id){
         service.delete(id);
-        return Result.success(SummaryMsg.DELETE_SUMMARY_SUCCESS);
+        return Result.success(SummaryMsg.DELETE_SUMMARY_SUCCESS,null);
     }
 
     /**
@@ -65,12 +65,12 @@ public class SummaryController {
     @GetMapping("/scrollQuery")
     public Result scrollQuery(@Validated SummaryScrollQueryDTO dto){
         List<Summary> summaries = service.scrollQuery(dto);
-        return Result.success(summaries);
+        return Result.success(null,summaries);
     }
 
     @GetMapping("/getTotalNumber/{id}")
     public Result getTotalNumber(@PathVariable @NotNull Long id){
         Integer total = service.getTotalNumber(id);
-        return Result.success(total);
+        return Result.success(null,total);
     }
 }
